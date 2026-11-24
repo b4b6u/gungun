@@ -3,7 +3,7 @@
 /**
  * Fig. 01 — a clone of the app, not an impression of it.
  *
- * Every measurement here was taken from Nectar's own XAML: the 1000 × 340 workspace surface with its
+ * Every measurement here was taken from Gungun's own XAML: the 1000 × 340 workspace surface with its
  * 10 px padding and 26 px corner, the 34 px header row, the four 239 px cards with 13/10 padding and
  * 18 px corners, the type scale (13.5 titles, 12 rows, 11.5 input, 10.5 chips, 9.5 meta, 48 timer),
  * and the brushed colours from Theme.xaml. The whole thing is drawn at that exact size and then
@@ -38,7 +38,7 @@ const C = {
 
 const FONT = '"Segoe UI Variable Text","Segoe UI Variable","Segoe UI",system-ui,sans-serif';
 const MONO = 'Consolas,"Cascadia Mono",ui-monospace,monospace';
-const MARK = "/Nectar/Assets/nectar-mark.scale-400.png";
+const MARK = "/Gungun/Assets/gungun-mark.scale-400.png";
 
 const WIDTH = 1000;
 const HEIGHT = 340;
@@ -202,7 +202,7 @@ export default function AppDemo() {
               type="button"
             >
               <img alt="" src={MARK} style={{ width: 20, height: 20, borderRadius: 5 }} />
-              <span style={{ fontSize: 12.5, fontWeight: 600 }}>Nectar</span>
+              <span style={{ fontSize: 12.5, fontWeight: 600 }}>Gungun</span>
               <span style={{ marginLeft: "auto", fontSize: 11, fontFamily: MONO, color: C.shellMuted }}>
                 {mmss(seconds)}
               </span>
@@ -231,8 +231,8 @@ export default function AppDemo() {
                   columnGap: 8
                 }}
               >
-                <img alt="Nectar" src={MARK} style={{ width: 30, height: 30, borderRadius: 8 }} />
-                <span style={{ fontSize: 16, fontWeight: 600, color: C.shellText }}>Nectar</span>
+                <img alt="Gungun" src={MARK} style={{ width: 30, height: 30, borderRadius: 8 }} />
+                <span style={{ fontSize: 16, fontWeight: 600, color: C.shellText }}>Gungun</span>
 
                 <div
                   style={{
@@ -735,7 +735,7 @@ export default function AppDemo() {
                       <span style={{ fontSize: 12, color: C.inkMuted }} aria-hidden>⚙</span>
                       <span style={{ fontSize: 13.5, fontWeight: 600 }}>General</span>
                     </div>
-                    <div style={{ ...meta }}>HOW NECTAR BEHAVES</div>
+                    <div style={{ ...meta }}>HOW GUNGUN BEHAVES</div>
                     <ToggleRow label="Hover cards to lift them" />
                     <ToggleRow label="Show a banner when something fails" />
                     <div style={{ marginTop: "auto", display: "flex", alignItems: "center", gap: 6 }}>

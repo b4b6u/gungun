@@ -4,16 +4,16 @@ import ForestJourney from "../components/ForestJourney";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://nectarnotch.vercel.app"),
-  title: "Nectar — your day, perfectly anchored",
+  title: "Gungun — your day, perfectly anchored",
   description:
     "A top-anchored workspace for Windows: tasks, a focus timer, a scratchpad and today's calendar drop out of the notch. Free.",
   openGraph: {
-    title: "Nectar — your day, perfectly anchored",
+    title: "Gungun — your day, perfectly anchored",
     description:
       "Tasks, focus timer, notepad and calendar in a Windows overlay that never steals focus.",
     url: "https://nectarnotch.vercel.app",
-    siteName: "Nectar",
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Nectar for Windows" }],
+    siteName: "Gungun",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Gungun for Windows" }],
     type: "website"
   },
   twitter: { card: "summary_large_image", images: ["/og-image.png"] },
@@ -36,7 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "try{var t=localStorage.getItem('nectar:theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.classList.add('dark')}catch(e){}"
+              "try{var t=localStorage.getItem('gungun:theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.classList.add('dark')}catch(e){}"
           }}
         />
         <link rel="preconnect" href="https://fonts.googleapis.com" />

@@ -6,14 +6,14 @@ import { RateLimiter, clientKey } from "../../../lib/feedGuard";
  *
  * It resolves the *latest* GitHub release and redirects to its setup .exe, so the site never has to
  * be redeployed when a version ships and the button never points at a file that has been replaced.
- * The MSIX feed (`/downloads/nectar.appinstaller`) stays for people already installed that way, but
+ * The MSIX feed (`/downloads/gungun.appinstaller`) stays for people already installed that way, but
  * the plain setup exe is the one that installs without importing a certificate first.
  *
  * This route is unauthenticated and costs one GitHub API call when it misses: the resolved asset is
  * cached in-process for a few seconds and each client is limited per minute, so a loop against the
  * button cannot drain the API quota the installer feed also depends on.
  *
- * Configuration mirrors the feed route: NECTAR_GITHUB_REPO (or GITHUB_REPOSITORY), an optional
+ * Configuration mirrors the feed route: GUNGUN_GITHUB_REPO (or GITHUB_REPOSITORY), an optional
  * GITHUB_TOKEN for a private repository, and DOWNLOAD_RATE_LIMIT (default 30/minute per client).
  */
 
@@ -30,7 +30,7 @@ const limiter = new RateLimiter(RATE_LIMIT, 60_000);
 let cached: { location: string; asset: string; expiresAt: number } | null = null;
 
 function repoSlug(): string | null {
-  const raw = process.env.NECTAR_GITHUB_REPO ?? process.env.GITHUB_REPOSITORY ?? "";
+  const raw = process.env.GUNGUN_GITHUB_REPO ?? process.env.GITHUB_REPOSITORY ?? "";
   const trimmed = raw.trim();
   return /^[\w.-]+\/[\w.-]+$/.test(trimmed) ? trimmed : null;
 }
@@ -52,8 +52,8 @@ function redirect(location: string, asset: string, cacheState: "HIT" | "MISS"): 
     headers: {
       Location: location,
       "Cache-Control": "no-store",
-      "X-Nectar-Asset": asset,
-      "X-Nectar-Cache": cacheState,
+      "X-Gungun-Asset": asset,
+      "X-Gungun-Cache": cacheState,
       "X-RateLimit-Limit": String(RATE_LIMIT)
     }
   });
@@ -83,13 +83,13 @@ export async function GET(request: Request): Promise<Response> {
     return textPage(
       500,
       "The download is not configured.",
-      "This deployment has no NECTAR_GITHUB_REPO set, so it cannot find a release."
+      "This deployment has no GUNGUN_GITHUB_REPO set, so it cannot find a release."
     );
   }
 
   const headers: Record<string, string> = {
     Accept: "application/vnd.github+json",
-    "User-Agent": "nectar-site",
+    "User-Agent": "gungun-site",
     "X-GitHub-Api-Version": "2022-11-28"
   };
   const token = process.env.GITHUB_TOKEN ?? process.env.GH_TOKEN;
@@ -109,7 +109,7 @@ export async function GET(request: Request): Promise<Response> {
   }
 
   if (response.status === 404) {
-    return textPage(503, "Nectar is not released yet.", "The first build has not been published.");
+    return textPage(503, "Gungun is not released yet.", "The first build has not been published.");
   }
   if (!response.ok) {
     return textPage(502, "GitHub is not answering.", `GitHub returned ${response.status}.`);
@@ -120,7 +120,7 @@ export async function GET(request: Request): Promise<Response> {
 
   // Prefer the setup exe; fall back to the portable zip for a release published without one.
   const asset =
-    assets.find((candidate) => /^Nectar-Setup-.*\.exe$/i.test(candidate.name)) ??
+    assets.find((candidate) => /^Gungun-Setup-.*\.exe$/i.test(candidate.name)) ??
     assets.find((candidate) => /\.zip$/i.test(candidate.name));
 
   if (!asset || !isSecureFeedUrl(asset.browser_download_url)) {

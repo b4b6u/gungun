@@ -69,7 +69,7 @@ const nextConfig = {
       // Installs already on people's machines poll this exact path (it is the Uri baked into
       // every release before this change). Keep it alive by serving the generated feed there
       // instead of redirecting, so the update check never depends on redirect handling.
-      { source: "/downloads/nectar.appinstaller", destination: "/api/download/appinstaller" }
+      { source: "/downloads/gungun.appinstaller", destination: "/api/download/appinstaller" }
     ];
   }
 };

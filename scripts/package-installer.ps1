@@ -1,11 +1,11 @@
 <#
 .SYNOPSIS
-    Builds the easy installer: a self-contained publish folder, a portable zip, and Nectar-Setup.exe.
+    Builds the easy installer: a self-contained publish folder, a portable zip, and Gungun-Setup.exe.
 
 .DESCRIPTION
     The MSIX needs a trusted certificate before Windows will install it. This script produces the
     two artifacts that do not: a setup .exe (NSIS, per-user install, desktop and Start-menu
-    shortcuts, uninstaller) and a portable zip (extract, run Nectar.exe).
+    shortcuts, uninstaller) and a portable zip (extract, run Gungun.exe).
 
     Both contain the same self-contained build: the .NET runtime and the Windows App SDK travel
     inside, so a target machine needs nothing pre-installed.
@@ -31,22 +31,22 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
-$project = Join-Path $root 'Nectar\Nectar.csproj'
-$publish = Join-Path $root 'Nectar\bin\publish\win-x64'
+$project = Join-Path $root 'Gungun\Gungun.csproj'
+$publish = Join-Path $root 'Gungun\bin\publish\win-x64'
 $payload = Join-Path $root 'build\installer\payload'
 $dist = Join-Path $root 'dist'
-$nsi = Join-Path $root 'installer\nectar.nsi'
+$nsi = Join-Path $root 'installer\gungun.nsi'
 
 $version = ([xml](Get-Content $project)).Project.PropertyGroup.Version |
     Where-Object { $_ } | Select-Object -First 1
 if (-not $version) { throw "Could not read <Version> from $project" }
-Write-Output "building Nectar $version (self-contained publish, no certificate needed)"
+Write-Output "building Gungun $version (self-contained publish, no certificate needed)"
 
 if (-not $SkipPublish) {
     & dotnet publish $project -c Release -p:PublishProfile=win-x64
     if ($LASTEXITCODE -ne 0) { throw "publish failed with $LASTEXITCODE" }
-    if (-not (Test-Path (Join-Path $publish 'Nectar.exe'))) {
-        throw "Publish did not produce Nectar.exe under $publish"
+    if (-not (Test-Path (Join-Path $publish 'Gungun.exe'))) {
+        throw "Publish did not produce Gungun.exe under $publish"
     }
 
     # Stage a clean copy: the publish folder can hold leftovers from earlier configurations.
@@ -54,8 +54,8 @@ if (-not $SkipPublish) {
     New-Item -ItemType Directory -Force -Path $payload | Out-Null
     Copy-Item "$publish\*" $payload -Recurse -Force
 }
-elseif (-not (Test-Path (Join-Path $payload 'Nectar.exe'))) {
-    throw "-SkipPublish was used but $payload has no Nectar.exe"
+elseif (-not (Test-Path (Join-Path $payload 'Gungun.exe'))) {
+    throw "-SkipPublish was used but $payload has no Gungun.exe"
 }
 
 $publishBytes = (Get-ChildItem $payload -Recurse -File | Measure-Object -Property Length -Sum).Sum
@@ -64,7 +64,7 @@ Write-Output ("payload   : {0:N1} MB in {1} files" -f ($publishBytes / 1MB), (Ge
 New-Item -ItemType Directory -Force -Path $dist | Out-Null
 
 if (-not $SkipZip) {
-    $zip = Join-Path $dist "Nectar-$version-win-x64.zip"
+    $zip = Join-Path $dist "Gungun-$version-win-x64.zip"
     if (Test-Path $zip) { Remove-Item $zip -Force }
     Compress-Archive -Path "$payload\*" -DestinationPath $zip -CompressionLevel Optimal
     Write-Output ("portable  : {0} ({1:N1} MB)" -f $zip, ((Get-Item $zip).Length / 1MB))
@@ -90,11 +90,11 @@ if (-not $MakensisPath -or -not (Test-Path $MakensisPath)) {
     "/DAPP_VERSION=$version" `
     "/DAPP_SOURCE=$payload" `
     "/DOUT_DIR=$dist" `
-    "/DICON_FILE=$(Join-Path $root 'Nectar\Assets\nectar.ico')" `
+    "/DICON_FILE=$(Join-Path $root 'Gungun\Assets\gungun.ico')" `
     $nsi
 if ($LASTEXITCODE -ne 0) { throw "makensis failed with $LASTEXITCODE" }
 
-$setup = Join-Path $dist "Nectar-Setup-$version.exe"
+$setup = Join-Path $dist "Gungun-Setup-$version.exe"
 if (-not (Test-Path $setup)) { throw "Expected $setup to exist" }
 
 Write-Output ''
@@ -102,4 +102,4 @@ Write-Output ("setup     : {0}" -f $setup)
 Write-Output ("size      : {0:N1} MB" -f ((Get-Item $setup).Length / 1MB))
 Write-Output ("sha256    : {0}" -f (Get-FileHash $setup -Algorithm SHA256).Hash)
 Write-Output ''
-Write-Output "Installs per user to %LOCALAPPDATA%\Programs\Nectar — no administrator rights, no certificate."
+Write-Output "Installs per user to %LOCALAPPDATA%\Programs\Gungun — no administrator rights, no certificate."

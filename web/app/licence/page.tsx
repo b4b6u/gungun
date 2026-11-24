@@ -4,14 +4,14 @@ import LegalLayout from "../../components/LegalLayout";
 export const metadata: Metadata = {
   title: "Licence",
   description:
-    "Nectar Free is MIT licensed; the Pro tier is proprietary. Read the MIT text, where the open part ends, and the licences of the Microsoft, SQLite and type components it ships with.",
+    "Gungun Free is MIT licensed; the Pro tier is proprietary. Read the MIT text, where the open part ends, and the licences of the Microsoft, SQLite and type components it ships with.",
   alternates: { canonical: "/licence" },
-  openGraph: { title: "Licence — Nectar", type: "article", url: "/licence" }
+  openGraph: { title: "Licence — Gungun", type: "article", url: "/licence" }
 };
 
 const TOC = [
   { id: "mit", label: "The MIT licence" },
-  { id: "pro", label: "Nectar Pro" },
+  { id: "pro", label: "Gungun Pro" },
   { id: "means", label: "What it lets you do" },
   { id: "third-party", label: "Third-party components" },
   { id: "brand", label: "The name and the bird" },
@@ -20,7 +20,7 @@ const TOC = [
 
 const MIT_TEXT = `MIT License
 
-Copyright (c) 2026 Nectar contributors
+Copyright (c) 2026 Gungun contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -44,21 +44,21 @@ export default function LicencePage() {
   return (
     <LegalLayout
       title="Licence"
-      lede="Nectar Free is open source under the MIT licence: use it, read it, change it, ship it inside something else. Nectar Pro is not — it is proprietary, sold as a licence key. Below is the MIT text in full, what it lets you do, and exactly where the open part ends."
-      updated="Last updated 14 November 2026 · Applies to Nectar 1.0.3"
+      lede="Gungun Free is open source under the MIT licence: use it, read it, change it, ship it inside something else. Gungun Pro is not — it is proprietary, sold as a licence key. Below is the MIT text in full, what it lets you do, and exactly where the open part ends."
+      updated="Last updated 14 November 2026 · Applies to Gungun 1.0.3"
       toc={TOC}
     >
       <section id="mit">
         <h2>The MIT licence</h2>
         <p>
           The free application, this website and the source are released under MIT. One carve-out:
-          the Nectar Pro tier, which has its own section below.
+          the Gungun Pro tier, which has its own section below.
         </p>
         <pre>{MIT_TEXT}</pre>
       </section>
 
       <section id="pro">
-        <h2>Nectar Pro</h2>
+        <h2>Gungun Pro</h2>
         <p>
           <strong>The Pro tier is proprietary.</strong> Its licence activation code, its feature
           modules and its extra palettes are copyright &copy; 2026 b4b6u, all rights reserved. MIT
@@ -80,7 +80,7 @@ export default function LicencePage() {
             repository&rsquo;s releases — the public release channel carries the free build alone.
           </li>
           <li>
-            <strong>When a licence ends</strong> the app keeps running as Nectar Free. Nothing takes
+            <strong>When a licence ends</strong> the app keeps running as Gungun Free. Nothing takes
             away the rights MIT already gave you.
           </li>
         </ul>
@@ -102,7 +102,7 @@ export default function LicencePage() {
             timer — no permission needed.
           </li>
           <li>
-            <strong>Pass it on.</strong> Bundle Nectar into another product, or sell a build, as long
+            <strong>Pass it on.</strong> Bundle Gungun into another product, or sell a build, as long
             as the copyright notice and the permission notice travel with it.
           </li>
         </ul>
@@ -121,7 +121,7 @@ export default function LicencePage() {
       <section id="third-party">
         <h2>Third-party components</h2>
         <p>
-          Nectar is native C# rather than a bundled browser, so the list is short. These are the
+          Gungun is native C# rather than a bundled browser, so the list is short. These are the
           pieces that end up in a published build, with their own terms:
         </p>
         <table>
@@ -147,7 +147,7 @@ export default function LicencePage() {
               <td>Entity Framework Core + SQLite provider</td>
               <td>MIT</td>
               <td>
-                Microsoft. Reads and writes <code>nectar.db</code>.
+                Microsoft. Reads and writes <code>gungun.db</code>.
               </td>
             </tr>
             <tr>
@@ -177,10 +177,10 @@ export default function LicencePage() {
       <section id="brand">
         <h2>The name and the bird</h2>
         <p>
-          The MIT licence covers the code. It does not hand over the Nectar name or the hummingbird
+          The MIT licence covers the code. It does not hand over the Gungun name or the hummingbird
           mark, which identify this project: a fork is welcome, but it should ship under its own name
           and icon so people can tell the two apart. The logo itself is included in the repository
-          for building and distributing Nectar, not for unrelated branding.
+          for building and distributing Gungun, not for unrelated branding.
         </p>
       </section>
 

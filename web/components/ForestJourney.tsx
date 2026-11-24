@@ -17,7 +17,7 @@ import { setMidBranchesHidden, useFlock } from "./forest/useFlock";
  * The corner pill carries the flock, the calls, the pause and the theme.
  */
 
-const THEME_KEY = "nectar:theme";
+const THEME_KEY = "gungun:theme";
 
 const BRANCH_IDS = {
   left: ["left-top", "left-mid", "left-low"],

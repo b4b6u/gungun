@@ -9,13 +9,13 @@ export default function SiteFooter() {
       <div className="mx-auto flex max-w-shell flex-col gap-6 px-5 pb-20 pt-10 sm:px-6 md:flex-row md:items-center md:justify-between">
         <Link className="group flex items-center gap-2" href="/">
           <Image
-            alt="Nectar"
+            alt="Gungun"
             className="h-[30px] w-[30px] rounded-[9px] border-2 border-paper/40 transition-transform group-hover:-rotate-6"
             height={30}
-            src="/Nectar/Assets/nectar-mark.scale-400.png"
+            src="/Gungun/Assets/gungun-mark.scale-400.png"
             width={30}
           />
-          <span className="font-display text-[30px] uppercase leading-none">nectar</span>
+          <span className="font-display text-[30px] uppercase leading-none">gungun</span>
           <span className="text-[15px] text-orange transition-transform group-hover:scale-110">
             &hearts;
           </span>

@@ -31,5 +31,5 @@ TestResults/
 *.log
 .dotnet/
 
-# Working clone of the private Pro repository (b4b6u/nectar-pro).
+# Working clone of the private Pro repository (b4b6u/gungun-pro).
 /pro/

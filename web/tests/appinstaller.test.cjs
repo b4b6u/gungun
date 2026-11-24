@@ -9,11 +9,11 @@ const {
 } = require("../.test-build/lib/appinstaller.js");
 
 const FEED = {
-  feedUrl: "https://nectar.app/download",
-  msixUrl: "https://github.com/o/n/releases/download/v2.0.1/Nectar-2.0.1-x64.msix",
-  packageName: "Nectar.Desktop",
+  feedUrl: "https://gungun.app/download",
+  msixUrl: "https://github.com/o/n/releases/download/v2.0.1/Gungun-2.0.1-x64.msix",
+  packageName: "Gungun.Desktop",
   version: "2.0.1.0",
-  publisher: "CN=Nectar Ltd, O=Nectar Ltd, C=GB"
+  publisher: "CN=Gungun Ltd, O=Gungun Ltd, C=GB"
 };
 
 test("builds the App Installer shape Windows expects", () => {
@@ -21,12 +21,12 @@ test("builds the App Installer shape Windows expects", () => {
 
   assert.ok(xml.startsWith('<?xml version="1.0" encoding="utf-8"?>'), "ships an XML declaration");
   assert.ok(xml.includes('xmlns="http://schemas.microsoft.com/appx/appinstaller/2018"'));
-  assert.ok(xml.includes('Uri="https://nectar.app/download"'), "root Uri is the feed itself");
+  assert.ok(xml.includes('Uri="https://gungun.app/download"'), "root Uri is the feed itself");
   assert.ok(xml.includes('<MainPackage'), "uses MainPackage, not MainBundle");
-  assert.ok(xml.includes('Name="Nectar.Desktop"'));
+  assert.ok(xml.includes('Name="Gungun.Desktop"'));
   assert.ok(xml.includes('Version="2.0.1.0"'));
   assert.ok(xml.includes('ProcessorArchitecture="x64"'));
-  assert.ok(xml.includes('Uri="https://github.com/o/n/releases/download/v2.0.1/Nectar-2.0.1-x64.msix"'));
+  assert.ok(xml.includes('Uri="https://github.com/o/n/releases/download/v2.0.1/Gungun-2.0.1-x64.msix"'));
   assert.ok(xml.includes('<OnLaunch HoursBetweenUpdateChecks="0" ShowPrompt="false" UpdateMode="Automatic" />'));
   assert.ok(xml.includes("<AutomaticBackgroundTask />"));
   assert.ok(xml.includes("<ForceUpdateFromAnyVersion>false</ForceUpdateFromAnyVersion>"));
@@ -35,14 +35,14 @@ test("builds the App Installer shape Windows expects", () => {
 });
 
 test("escapes XML attribute values and round-trips through the parser", () => {
-  const publisher = 'CN=Nectar & Sons, O=A <"quoted"> Ltd';
+  const publisher = 'CN=Gungun & Sons, O=A <"quoted"> Ltd';
   const xml = buildAppInstaller({ ...FEED, publisher });
   const msix = "https://github.com/o/n/r.msix?x=1&y=2";
 
-  assert.ok(xml.includes("CN=Nectar &amp; Sons"));
+  assert.ok(xml.includes("CN=Gungun &amp; Sons"));
   assert.ok(xml.includes("&lt;"));
   assert.ok(xml.includes("&quot;"));
-  assert.ok(!xml.includes('publisher="CN=Nectar & Sons'), "no raw ampersand survives");
+  assert.ok(!xml.includes('publisher="CN=Gungun & Sons'), "no raw ampersand survives");
 
   const parsed = parseMainPackage(buildAppInstaller({ ...FEED, publisher, msixUrl: msix }));
   assert.equal(parsed.publisher, publisher);
@@ -55,7 +55,7 @@ test("refuses a non-https installer URL", () => {
 });
 
 test("refuses a public http feed URL, but allows loopback for local testing", () => {
-  assert.throws(() => buildAppInstaller({ ...FEED, feedUrl: "http://nectar.app/download" }), /non-https feed URL/);
+  assert.throws(() => buildAppInstaller({ ...FEED, feedUrl: "http://gungun.app/download" }), /non-https feed URL/);
   assert.doesNotThrow(() => buildAppInstaller({ ...FEED, feedUrl: "http://localhost:3000/download" }));
   assert.doesNotThrow(() => buildAppInstaller({ ...FEED, feedUrl: "http://127.0.0.1:3000/download" }));
 });
@@ -80,28 +80,28 @@ test("derives the four-part identity version from a tag", () => {
 });
 
 test("accepts only https or loopback feed URLs", () => {
-  assert.equal(isSecureFeedUrl("https://nectar.app/download"), true);
+  assert.equal(isSecureFeedUrl("https://gungun.app/download"), true);
   assert.equal(isSecureFeedUrl("http://localhost:3000/download"), true);
   assert.equal(isSecureFeedUrl("http://127.0.0.1/download"), true);
-  assert.equal(isSecureFeedUrl("http://nectar.app/download"), false);
-  assert.equal(isSecureFeedUrl("//nectar.app/download"), false);
+  assert.equal(isSecureFeedUrl("http://gungun.app/download"), false);
+  assert.equal(isSecureFeedUrl("//gungun.app/download"), false);
   assert.equal(isSecureFeedUrl("not a url"), false);
 });
 
 test("parses MainPackage attributes regardless of order, case or whitespace", () => {
   const upstream = `<?xml version="1.0"?>
-<AppInstaller xmlns="http://schemas.microsoft.com/appx/appinstaller/2018" Uri="https://nectar.app/download">
+<AppInstaller xmlns="http://schemas.microsoft.com/appx/appinstaller/2018" Uri="https://gungun.app/download">
   <MainPackage
       version="2.0.1.0"
-      NAME="Nectar.Desktop"
-      Publisher="CN=Nectar &amp; Sons"
+      NAME="Gungun.Desktop"
+      Publisher="CN=Gungun &amp; Sons"
       Uri="https://github.com/o/n/x.msix" />
 </AppInstaller>`;
 
   const parsed = parseMainPackage(upstream);
-  assert.equal(parsed.name, "Nectar.Desktop");
+  assert.equal(parsed.name, "Gungun.Desktop");
   assert.equal(parsed.version, "2.0.1.0");
-  assert.equal(parsed.publisher, "CN=Nectar & Sons");
+  assert.equal(parsed.publisher, "CN=Gungun & Sons");
   assert.equal(parsed.uri, "https://github.com/o/n/x.msix");
 });
 

@@ -27,7 +27,7 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Test
-        run: dotnet test tests/Nectar.Tests/Nectar.Tests.csproj -c Release --logger "console;verbosity=normal"
+        run: dotnet test tests/Gungun.Tests/Gungun.Tests.csproj -c Release --logger "console;verbosity=normal"
 
   feed-tests:
     # This exact name is the required status check on main: a red run must block merging.

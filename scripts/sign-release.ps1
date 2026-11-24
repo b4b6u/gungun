@@ -1,13 +1,13 @@
 <#
 .SYNOPSIS
-    Authenticode-signs the published Nectar build and optionally packs a release zip.
+    Authenticode-signs the published Gungun build and optionally packs a release zip.
 
 .DESCRIPTION
-    Picks signtool.exe from the newest installed Windows SDK (or PATH), signs Nectar.exe with
+    Picks signtool.exe from the newest installed Windows SDK (or PATH), signs Gungun.exe with
     SHA-256 and an RFC 3161 timestamp, then verifies the result. Use either a PFX file or a
     certificate that already lives in CurrentUser\My:
 
-        .\scripts\sign-release.ps1 -PfxPath .\nectar-signing.pfx
+        .\scripts\sign-release.ps1 -PfxPath .\gungun-signing.pfx
         .\scripts\sign-release.ps1 -Thumbprint 3F1A9C... -Zip
 
     The script stores no credentials. A PFX password is read from a prompt unless one is
@@ -22,7 +22,7 @@
     http://timestamp.sectigo.com.
 
 .PARAMETER Zip
-    Also produce dist\Nectar-<Version>-win-x64.zip and print its SHA-256.
+    Also produce dist\Gungun-<Version>-win-x64.zip and print its SHA-256.
 #>
 [CmdletBinding(DefaultParameterSetName = 'Pfx')]
 param(
@@ -50,17 +50,17 @@ $ErrorActionPreference = 'Stop'
 $scriptRoot = if ($PSScriptRoot) { $PSScriptRoot } else { Split-Path -Parent $PSCommandPath }
 
 if (-not $PublishDir) {
-    $PublishDir = Join-Path $scriptRoot '..\Nectar\bin\publish\win-x64'
+    $PublishDir = Join-Path $scriptRoot '..\Gungun\bin\publish\win-x64'
 }
 
 if (-not (Test-Path $PublishDir)) {
-    throw "Publish folder not found: $PublishDir. Run: dotnet publish Nectar/Nectar.csproj -p:PublishProfile=win-x64"
+    throw "Publish folder not found: $PublishDir. Run: dotnet publish Gungun/Gungun.csproj -p:PublishProfile=win-x64"
 }
 
 $PublishDir = (Resolve-Path $PublishDir).Path
-$exe = Join-Path $PublishDir 'Nectar.exe'
+$exe = Join-Path $PublishDir 'Gungun.exe'
 if (-not (Test-Path $exe)) {
-    throw "Nectar.exe is not in $PublishDir. Publish before signing."
+    throw "Gungun.exe is not in $PublishDir. Publish before signing."
 }
 
 function Find-SignTool {
@@ -144,7 +144,7 @@ from a trusted CA. Pass -AllowUntrusted only to prove the pipeline locally.
 if ($Zip) {
     $dist = Join-Path (Resolve-Path (Join-Path $scriptRoot '..')).Path 'dist'
     New-Item -ItemType Directory -Force -Path $dist | Out-Null
-    $zipPath = Join-Path $dist "Nectar-$Version-win-x64.zip"
+    $zipPath = Join-Path $dist "Gungun-$Version-win-x64.zip"
 
     if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
 

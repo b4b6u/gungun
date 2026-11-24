@@ -4,9 +4,9 @@ import LegalLayout from "../../components/LegalLayout";
 export const metadata: Metadata = {
   title: "Privacy",
   description:
-    "Nectar keeps tasks, notes, focus sessions and calendar tokens on your own PC. No account, no telemetry, no analytics — and this site sets no cookies.",
+    "Gungun keeps tasks, notes, focus sessions and calendar tokens on your own PC. No account, no telemetry, no analytics — and this site sets no cookies.",
   alternates: { canonical: "/privacy" },
-  openGraph: { title: "Privacy — Nectar", type: "article", url: "/privacy" }
+  openGraph: { title: "Privacy — Gungun", type: "article", url: "/privacy" }
 };
 
 const TOC = [
@@ -23,14 +23,14 @@ export default function PrivacyPage() {
   return (
     <LegalLayout
       title="Privacy"
-      lede="Nectar has no account, no server and no analytics. What you type into it stays in one folder on your own PC — this page lists exactly what that folder holds, and what leaves the machine when you link a calendar."
-      updated="Last updated 14 November 2026 · Covers Nectar 1.0.3 and this website"
+      lede="Gungun has no account, no server and no analytics. What you type into it stays in one folder on your own PC — this page lists exactly what that folder holds, and what leaves the machine when you link a calendar."
+      updated="Last updated 14 November 2026 · Covers Gungun 1.0.3 and this website"
       toc={TOC}
     >
       <section id="short">
         <h2>The short version</h2>
         <p>
-          There is no Nectar account and no Nectar backend. The app does not send usage data, crash
+          There is no Gungun account and no Gungun backend. The app does not send usage data, crash
           reports or diagnostics anywhere, because there is nowhere for them to go: the only network
           requests it makes are the calendar calls you set up yourself, plus the update check against
           this site&rsquo;s installer feed.
@@ -44,7 +44,7 @@ export default function PrivacyPage() {
       <section id="stored">
         <h2>What is stored, and where</h2>
         <p>
-          Everything lives in <code>%LOCALAPPDATA%\Nectar</code>. The folder is yours: copy it, back
+          Everything lives in <code>%LOCALAPPDATA%\Gungun</code>. The folder is yours: copy it, back
           it up, or delete it.
         </p>
         <table>
@@ -56,7 +56,7 @@ export default function PrivacyPage() {
           </thead>
           <tbody>
             <tr>
-              <td>nectar.db</td>
+              <td>gungun.db</td>
               <td>
                 An SQLite database: your tasks and their completion dates, the scratchpad note, and
                 one row per focus session.
@@ -78,7 +78,7 @@ export default function PrivacyPage() {
               </td>
             </tr>
             <tr>
-              <td>nectar.log</td>
+              <td>gungun.log</td>
               <td>
                 A diagnostic log the app appends to while it runs. It can include the title of a
                 reminder that fired, so treat it as personal if your event names are.
@@ -87,7 +87,7 @@ export default function PrivacyPage() {
           </tbody>
         </table>
         <p>
-          There is no cloud sync and no hidden copy elsewhere. Pinning Nectar to another machine
+          There is no cloud sync and no hidden copy elsewhere. Pinning Gungun to another machine
           means copying the folder yourself.
         </p>
       </section>
@@ -96,8 +96,8 @@ export default function PrivacyPage() {
         <h2>Calendar connections</h2>
         <p>
           Linking a calendar is optional and uses OAuth with PKCE against <em>your own</em> client
-          ID: you create the app registration with Google or Microsoft, and paste its ID into Nectar.
-          There is no shared Nectar client credential, and no intermediary server sitting between the
+          ID: you create the app registration with Google or Microsoft, and paste its ID into Gungun.
+          There is no shared Gungun client credential, and no intermediary server sitting between the
           app and the provider.
         </p>
         <p>The scopes requested are the narrowest that still show a day:</p>
@@ -111,7 +111,7 @@ export default function PrivacyPage() {
           </li>
         </ul>
         <p>
-          Tokens are sealed with DPAPI (user scope) and never leave the machine. Nectar cannot write
+          Tokens are sealed with DPAPI (user scope) and never leave the machine. Gungun cannot write
           to, move or delete anything in your calendar. Google or Microsoft still see the requests
           the app makes to them, under their own privacy policies — that part is between you and
           whichever provider you link.
@@ -131,7 +131,7 @@ export default function PrivacyPage() {
             Microsoft sign-in and events.
           </li>
           <li>
-            <code>nectar.app</code> for the installer feed, which packaged (MSIX) copies use to
+            <code>gungun.app</code> for the installer feed, which packaged (MSIX) copies use to
             fetch updates. It is a plain file request; no identifier is attached to it. The plain
             setup installer does not check for updates at all.
           </li>
@@ -182,10 +182,10 @@ export default function PrivacyPage() {
             <a href="https://account.live.com/consent/Manage" rel="noreferrer" target="_blank">
               Microsoft
             </a>
-            , which cuts Nectar off even if a token were left behind.
+            , which cuts Gungun off even if a token were left behind.
           </li>
           <li>
-            <strong>Delete everything</strong> by removing <code>%LOCALAPPDATA%\Nectar</code> while
+            <strong>Delete everything</strong> by removing <code>%LOCALAPPDATA%\Gungun</code> while
             the app is closed. There is no remote copy to clean up.
           </li>
           <li>

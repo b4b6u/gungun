@@ -4,9 +4,9 @@ import SiteFooter from "../../components/SiteFooter";
 import SiteHeader from "../../components/SiteHeader";
 
 export const metadata: Metadata = {
-  title: "Installing Nectar — one extra click, explained",
+  title: "Installing Gungun — one extra click, explained",
   description:
-    "Windows will ask whether you trust Nectar the first time you install it. Here is what that prompt means, why it appears, and the two clicks that get past it.",
+    "Windows will ask whether you trust Gungun the first time you install it. Here is what that prompt means, why it appears, and the two clicks that get past it.",
   alternates: { canonical: "/download-steps" }
 };
 
@@ -14,13 +14,13 @@ export const metadata: Metadata = {
  * A stable alias GitHub keeps pointing at the newest release that contains it, so this link survives
  * every version and works from any host — no API route, no environment variable, no redeploy.
  */
-const DOWNLOAD_URL = "https://github.com/b4b6u/Nectar/releases/latest/download/Nectar-Setup.exe";
+const DOWNLOAD_URL = "https://github.com/b4b6u/Gungun/releases/latest/download/Gungun-Setup.exe";
 
 const STEPS = [
   {
     number: "01",
     title: "Download the installer",
-    copy: "One file, Nectar-Setup. Your browser may ask you to keep the download first — the same check, one step earlier. It installs for your Windows user only, so there is no administrator prompt."
+    copy: "One file, Gungun-Setup. Your browser may ask you to keep the download first — the same check, one step earlier. It installs for your Windows user only, so there is no administrator prompt."
   },
   {
     number: "02",
@@ -30,7 +30,7 @@ const STEPS = [
   {
     number: "03",
     title: "Click “Run anyway”",
-    copy: "That is the only way past a Windows prompt for an app Microsoft has not seen before. Nectar installs, and the prompt never appears again."
+    copy: "That is the only way past a Windows prompt for an app Microsoft has not seen before. Gungun installs, and the prompt never appears again."
   }
 ] as const;
 
@@ -65,7 +65,7 @@ const CHECKS = [
     after: (
       <>
         When a certificate is added it will read{" "}
-        <strong className="font-bold">Nectar</strong>. Until then the checksum below is the check
+        <strong className="font-bold">Gungun</strong>. Until then the checksum below is the check
         that does not depend on reputation.
       </>
     )
@@ -75,7 +75,7 @@ const CHECKS = [
     body: (
       <>
         The download starts on this site and hands you to{" "}
-        <strong className="font-bold">github.com/b4b6u/Nectar</strong>, the repository&rsquo;s own
+        <strong className="font-bold">github.com/b4b6u/Gungun</strong>, the repository&rsquo;s own
         release page. If a link in an email or a chat window sends you anywhere else, close it and
         come back here.
       </>
@@ -84,7 +84,7 @@ const CHECKS = [
   {
     label: "Checksum",
     body: <>Every release publishes a SHA-256 beside the file. Compare yours with that line:</>,
-    command: "Get-FileHash .\\Nectar-Setup.exe"
+    command: "Get-FileHash .\\Gungun-Setup.exe"
   }
 ] as const;
 
@@ -125,7 +125,7 @@ function SmartScreenMock({
               <dl className="mt-4 space-y-1 border-t border-black/10 pt-3 text-[12.5px] text-[#4a4a4a]">
                 <div className="flex gap-2">
                   <dt className="w-20 shrink-0 text-[#6b6b6b]">App</dt>
-                  <dd className="m-0 font-medium text-[#1b1b1b]">Nectar</dd>
+                  <dd className="m-0 font-medium text-[#1b1b1b]">Gungun</dd>
                 </div>
                 <div className="flex gap-2">
                   <dt className="w-20 shrink-0 text-[#6b6b6b]">Publisher</dt>
@@ -181,7 +181,7 @@ export default function DownloadStepsPage() {
             <span className="inline-block text-orange">Two clicks and you&rsquo;re in.</span>
           </h1>
           <p className="mx-auto mt-7 max-w-xl text-[17px] leading-relaxed text-inkSoft">
-            The first time you install Nectar, Windows shows a blue &ldquo;Windows protected your
+            The first time you install Gungun, Windows shows a blue &ldquo;Windows protected your
             PC&rdquo; screen. Nothing is wrong — it says that about every app Microsoft has not seen
             enough of yet. Here is exactly what to click.
           </p>
@@ -226,7 +226,7 @@ export default function DownloadStepsPage() {
             </h2>
             <p className="mt-5 text-[15.5px] leading-relaxed text-muted">
               SmartScreen is a popularity check, not a virus scan. Microsoft builds a reputation for
-              an installer as more people download and run it; until Nectar has one, the prompt is
+              an installer as more people download and run it; until Gungun has one, the prompt is
               what Windows does by default. It is the same screen that greets small utilities,
               open-source tools and brand-new releases of well-known apps.
             </p>
@@ -292,7 +292,7 @@ export default function DownloadStepsPage() {
         <section className="mx-auto mt-20 max-w-2xl text-center">
           <h2 className="font-display text-shout uppercase leading-[0.9]">Ready when you are.</h2>
           <p className="mx-auto mt-4 max-w-lg text-[15px] leading-relaxed text-muted">
-            The download is small, the install takes under a minute, and Nectar opens quietly in the
+            The download is small, the install takes under a minute, and Gungun opens quietly in the
             notch — press{" "}
             <kbd className="rounded border-2 border-ink bg-sun px-1.5 py-0.5 text-inkSolid font-mono text-[12px]">
               Alt
@@ -309,7 +309,7 @@ export default function DownloadStepsPage() {
             href={DOWNLOAD_URL}
             download
           >
-            Download Nectar
+            Download Gungun
           </a>
 
           <p className="mt-5 text-[10.5px] font-bold uppercase tracking-[0.2em] text-muted">
@@ -328,7 +328,7 @@ export default function DownloadStepsPage() {
             >
               privacy page
             </Link>{" "}
-            lists everything Nectar stores on your PC.
+            lists everything Gungun stores on your PC.
           </p>
         </section>
       </main>

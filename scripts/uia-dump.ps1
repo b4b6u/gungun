@@ -20,9 +20,9 @@ function Send-AltN {
     [Keys2]::keybd_event(0x12, 0, 2, [UIntPtr]::Zero)
 }
 
-$exe = "D:\canopy\Nectar\bin\Debug\net8.0-windows10.0.19041.0\win-x64\Nectar.exe"
-$log = Join-Path $env:LOCALAPPDATA "Nectar\nectar.log"
-Get-Process Nectar -ErrorAction SilentlyContinue | Stop-Process -Force
+$exe = "D:\canopy\Gungun\bin\Debug\net8.0-windows10.0.19041.0\win-x64\Gungun.exe"
+$log = Join-Path $env:LOCALAPPDATA "Gungun\gungun.log"
+Get-Process Gungun -ErrorAction SilentlyContinue | Stop-Process -Force
 Start-Sleep -Milliseconds 400
 
 $p = Start-Process -FilePath $exe -PassThru

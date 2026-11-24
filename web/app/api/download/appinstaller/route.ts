@@ -22,11 +22,11 @@ import { RateLimiter, clientKey, escapeHtml, fingerprint, newRequestId } from ".
  *   - short in-process cache (FEED_CACHE_SECONDS, default 30) plus 60s CDN caching, so a burst of
  *     update checks costs GitHub one lookup rather than thousands;
  *   - ETag/304 so a client that already has the feed transfers nothing;
- *   - one structured JSON log line per request, an X-Nectar-Request-Id on every response, and an
+ *   - one structured JSON log line per request, an X-Gungun-Request-Id on every response, and an
  *     optional FEED_ALERT_WEBHOOK POST for 5xx incidents.
  *
  * Configuration (Vercel → Environment Variables):
- *   NECTAR_GITHUB_REPO  owner/repo, e.g. "nectar-app/nectar"  (falls back to GITHUB_REPOSITORY)
+ *   GUNGUN_GITHUB_REPO  owner/repo, e.g. "gungun-app/gungun"  (falls back to GITHUB_REPOSITORY)
  *   GITHUB_TOKEN        optional; required only for a private repository (raises the API limit)
  *   MSIX_PUBLISHER      optional fallback if a release has no .appinstaller asset
  *   FEED_RATE_LIMIT     requests per minute per client (default 60)
@@ -40,7 +40,7 @@ import { RateLimiter, clientKey, escapeHtml, fingerprint, newRequestId } from ".
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-const PACKAGE_NAME = "Nectar.Desktop";
+const PACKAGE_NAME = "Gungun.Desktop";
 const GITHUB_API = "https://api.github.com";
 const FETCH_TIMEOUT_MS = 6000;
 
@@ -99,13 +99,13 @@ function reportIncident(requestId: string, event: string, fields: Record<string,
   void fetch(webhook, {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ text: `Nectar feed incident: ${event}`, requestId, ...fields }),
+    body: JSON.stringify({ text: `Gungun feed incident: ${event}`, requestId, ...fields }),
     signal: AbortSignal.timeout(2000)
   }).catch(() => undefined);
 }
 
 function repoSlug(): string | null {
-  const raw = process.env.NECTAR_GITHUB_REPO ?? process.env.GITHUB_REPOSITORY ?? "";
+  const raw = process.env.GUNGUN_GITHUB_REPO ?? process.env.GITHUB_REPOSITORY ?? "";
   const trimmed = raw.trim();
   return /^[\w.-]+\/[\w.-]+$/.test(trimmed) ? trimmed : null;
 }
@@ -123,7 +123,7 @@ function publicUrl(request: Request): string {
 async function githubFetch(url: string, accept: string): Promise<Response> {
   const headers: Record<string, string> = {
     Accept: accept,
-    "User-Agent": "nectar-site",
+    "User-Agent": "gungun-site",
     "X-GitHub-Api-Version": "2022-11-28"
   };
 
@@ -193,7 +193,7 @@ function htmlPage(
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>${escapeHtml(title)} — Nectar</title>
+<title>${escapeHtml(title)} — Gungun</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -227,10 +227,10 @@ function htmlPage(
 </head>
 <body>
 <main>
-  <p class="eyebrow">Nectar for Windows</p>
+  <p class="eyebrow">Gungun for Windows</p>
   <h1>${title}</h1>
   <p class="copy">${message}</p>
-  <a href="/">Back to Nectar</a>
+  <a href="/">Back to Gungun</a>
   <p class="ref">Request ${escapeHtml(requestId)}</p>
 </main>
 </body>
@@ -242,7 +242,7 @@ function htmlPage(
       "Content-Type": "text/html; charset=utf-8",
       "Cache-Control": "no-store",
       "X-Content-Type-Options": "nosniff",
-      "X-Nectar-Request-Id": requestId,
+      "X-Gungun-Request-Id": requestId,
       ...extraHeaders
     }
   });
@@ -261,15 +261,15 @@ function feedResponse(
 ): Response {
   const headers: Record<string, string> = {
     "Content-Type": "application/appinstaller",
-    "Content-Disposition": 'inline; filename="nectar.appinstaller"',
+    "Content-Disposition": 'inline; filename="gungun.appinstaller"',
     // Short CDN cache: a new release should reach clients within a minute, and Windows compares
     // the Version inside the feed against the installed package.
     "Cache-Control": "public, max-age=0, s-maxage=60, stale-while-revalidate=300",
     ETag: etag,
-    "X-Nectar-Cache": cacheState,
-    "X-Nectar-Feed-Url": feedUrl,
-    "X-Nectar-Feed-Version": version,
-    "X-Nectar-Request-Id": requestId,
+    "X-Gungun-Cache": cacheState,
+    "X-Gungun-Feed-Url": feedUrl,
+    "X-Gungun-Feed-Version": version,
+    "X-Gungun-Request-Id": requestId,
     "X-RateLimit-Limit": String(RATE_LIMIT),
     "X-RateLimit-Remaining": String(remaining),
     "X-Content-Type-Options": "nosniff",
@@ -296,7 +296,7 @@ export async function GET(request: Request): Promise<Response> {
     return htmlPage(
       429,
       "Too many download requests.",
-      "Nectar's installer feed is being polled faster than expected. Wait a moment and try again — an installed copy checks on its own and is unaffected.",
+      "Gungun's installer feed is being polled faster than expected. Wait a moment and try again — an installed copy checks on its own and is unaffected.",
       {
         "Retry-After": String(limit.retryAfterSeconds),
         "X-RateLimit-Limit": String(RATE_LIMIT),
@@ -315,7 +315,7 @@ export async function GET(request: Request): Promise<Response> {
     return htmlPage(
       500,
       "The download feed is not configured.",
-      "This deployment has no <code>NECTAR_GITHUB_REPO</code> set, so it cannot look up a release. Set it to <code>owner/repo</code> and redeploy.",
+      "This deployment has no <code>GUNGUN_GITHUB_REPO</code> set, so it cannot look up a release. Set it to <code>owner/repo</code> and redeploy.",
       {},
       requestId
     );
@@ -347,7 +347,7 @@ export async function GET(request: Request): Promise<Response> {
       502,
       "GitHub is not answering.",
       "The release feed could not be read just now. Please try again in a minute — the installer itself is unaffected.",
-      { "Retry-After": "300", "X-Nectar-Feed-Url": feedUrl },
+      { "Retry-After": "300", "X-Gungun-Feed-Url": feedUrl },
       requestId
     );
   }
@@ -357,9 +357,9 @@ export async function GET(request: Request): Promise<Response> {
 
     return htmlPage(
       503,
-      "Nectar is not released yet.",
+      "Gungun is not released yet.",
       "The first signed build has not been published. This page is the live installer feed — it will serve the download the moment the release is out.",
-      { "Retry-After": "3600", "X-Nectar-Feed-Url": feedUrl },
+      { "Retry-After": "3600", "X-Gungun-Feed-Url": feedUrl },
       requestId
     );
   }
@@ -373,7 +373,7 @@ export async function GET(request: Request): Promise<Response> {
       503,
       "That release has no installer yet.",
       `Release <code>${escapeHtml(release.tag_name)}</code> is published but has no signed <code>.msix</code> attached. Nothing is installable until it does.`,
-      { "Retry-After": "900", "X-Nectar-Feed-Url": feedUrl },
+      { "Retry-After": "900", "X-Gungun-Feed-Url": feedUrl },
       requestId
     );
   }
@@ -395,7 +395,7 @@ export async function GET(request: Request): Promise<Response> {
       !publisher
         ? "No publisher could be determined. Attach the rendered <code>.appinstaller</code> to the release, or set <code>MSIX_PUBLISHER</code> to the certificate subject."
         : `The tag <code>${escapeHtml(release.tag_name)}</code> is not a MAJOR.MINOR.PATCH version, so the four-part identity cannot be derived.`,
-      { "X-Nectar-Feed-Url": feedUrl },
+      { "X-Gungun-Feed-Url": feedUrl },
       requestId
     );
   }
@@ -418,7 +418,7 @@ export async function GET(request: Request): Promise<Response> {
       502,
       "The installer feed is being repaired.",
       "The published release metadata is inconsistent, so no feed is being served. This is deliberate: Windows must never be pointed at a build we cannot vouch for.",
-      { "Retry-After": "600", "X-Nectar-Feed-Url": feedUrl },
+      { "Retry-After": "600", "X-Gungun-Feed-Url": feedUrl },
       requestId
     );
   }

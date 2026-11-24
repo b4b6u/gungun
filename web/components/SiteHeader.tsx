@@ -12,15 +12,15 @@ export default function SiteHeader() {
       <div className="mx-auto flex max-w-shell items-center justify-between gap-4 px-5 py-4 sm:px-6">
         <Link className="group flex items-center gap-2" href="/">
           <Image
-            alt="Nectar"
+            alt="Gungun"
             className="h-[30px] w-[30px] rounded-[9px] border-2 border-ink transition-transform group-hover:-rotate-6"
             height={30}
             priority
-            src="/Nectar/Assets/nectar-mark.scale-400.png"
+            src="/Gungun/Assets/gungun-mark.scale-400.png"
             width={30}
           />
           <span className="font-display text-[26px] uppercase leading-none tracking-[0.01em]">
-            nectar
+            gungun
           </span>
           <span className="text-[15px] text-orange transition-transform group-hover:scale-110">
             &hearts;

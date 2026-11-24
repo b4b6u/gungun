@@ -15,8 +15,8 @@ const SITE_URL = "https://nectarnotch.vercel.app";
 const STRUCTURED_DATA = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  name: "Nectar",
-  alternateName: "Nectar for Windows",
+  name: "Gungun",
+  alternateName: "Gungun for Windows",
   url: `${SITE_URL}/`,
   description:
     "A top-edge overlay for Windows: tasks, a focus timer, a scratchpad and today's calendar drop out of the notch. Local-first, no account, WinUI 3.",
@@ -34,9 +34,9 @@ const STRUCTURED_DATA = {
   },
   image: `${SITE_URL}/og-image.png`,
   screenshot: [
-    `${SITE_URL}/docs/nectar-expanded.png`,
-    `${SITE_URL}/docs/nectar-customize.png`,
-    `${SITE_URL}/docs/nectar-insights.png`
+    `${SITE_URL}/docs/gungun-expanded.png`,
+    `${SITE_URL}/docs/gungun-customize.png`,
+    `${SITE_URL}/docs/gungun-insights.png`
   ],
   featureList: [
     "Non-activating top-edge overlay opened by a shortcut, the top-edge hover band or the collapsed notch pill",
@@ -113,7 +113,7 @@ const ENTRIES = [
   {
     key: "Alt + N",
     title: "Your shortcut",
-    copy: "Click the chord in Customize and press a new one. If Windows already owns it, Nectar keeps the old one and tells you why. Esc cancels."
+    copy: "Click the chord in Customize and press a new one. If Windows already owns it, Gungun keeps the old one and tells you why. Esc cancels."
   },
   {
     key: "Top edge",
@@ -123,7 +123,7 @@ const ENTRIES = [
   {
     key: "Pill",
     title: "The collapsed notch",
-    copy: "Folded away, Nectar is a small black pill with the name and the countdown. Hide the pill and it disappears completely — the shortcut and the top edge still open it."
+    copy: "Folded away, Gungun is a small black pill with the name and the countdown. Hide the pill and it disappears completely — the shortcut and the top edge still open it."
   }
 ] as const;
 
@@ -136,7 +136,7 @@ const FACTS = [
   {
     value: "1",
     title: "SQLite file",
-    copy: "%LOCALAPPDATA%\\Nectar\\nectar.db holds the tasks, the note and every focus session."
+    copy: "%LOCALAPPDATA%\\Gungun\\gungun.db holds the tasks, the note and every focus session."
   },
   {
     value: "DPAPI",
@@ -222,7 +222,7 @@ export default function Home() {
             </h1>
 
             <p className="mx-auto mt-8 max-w-xl text-[17px] leading-relaxed text-inkSoft">
-              Nectar hangs off the top edge of your screen. Pull it down and your tasks, a focus
+              Gungun hangs off the top edge of your screen. Pull it down and your tasks, a focus
               timer, a scratchpad and today&rsquo;s calendar are already open — without stealing
               focus from the app you are working in.
             </p>
@@ -232,7 +232,7 @@ export default function Home() {
                 className="rounded-full border-2 border-ink bg-orange px-7 py-3 text-[12px] font-bold uppercase tracking-[0.16em] text-paper shadow-sticker transition-transform hover:-translate-y-0.5 hover:bg-red"
                 href="/download-steps"
               >
-                Download Nectar &mdash; free
+                Download Gungun &mdash; free
               </a>
               <a
                 className="rounded-full border-2 border-ink bg-paper px-7 py-3 text-[12px] font-bold uppercase tracking-[0.16em] text-ink transition-transform hover:-translate-y-0.5 hover:bg-sun"
@@ -271,7 +271,7 @@ export default function Home() {
               </h2>
               <p className="mx-auto mt-5 max-w-lg text-[16px] leading-relaxed text-muted">
                 A hummingbird never holds still for long — it darts, hovers, darts again. So does
-                attention. Nectar is not a cage for it; it is one branch worth coming back to, and
+                attention. Gungun is not a cage for it; it is one branch worth coming back to, and
                 this bird is on its way across the page to prove it.
               </p>
             </div>
@@ -399,10 +399,10 @@ export default function Home() {
         >
           <div className="sticker-card bg-paperDeep p-6">
             <Image
-              alt="The Nectar reminder tray: hummingbird mark, event title, a muted Reminder line, and two pills — Snooze 5 min and Okay."
+              alt="The Gungun reminder tray: hummingbird mark, event title, a muted Reminder line, and two pills — Snooze 5 min and Okay."
               className="h-auto w-full"
               height={92}
-              src="/docs/nectar-reminder.png"
+              src="/docs/gungun-reminder.png"
               width={560}
             />
           </div>
@@ -427,10 +427,10 @@ export default function Home() {
         >
           <div className="sticker-card overflow-hidden bg-ink">
             <Image
-              alt="Nectar's Customize view: a mint General card with the shortcut, hover and pill switches, a lilac Focus card, and a sky card for card order and visibility."
+              alt="Gungun's Customize view: a mint General card with the shortcut, hover and pill switches, a lilac Focus card, and a sky card for card order and visibility."
               className="h-auto w-full"
               height={480}
-              src="/docs/nectar-customize.png"
+              src="/docs/gungun-customize.png"
               width={1000}
             />
           </div>
@@ -452,7 +452,7 @@ export default function Home() {
               alt="The Insights tab: a sage momentum card with the week's headline and count, beside a lilac bar chart of the last seven days."
               className="h-auto w-full"
               height={450}
-              src="/docs/nectar-insights.png"
+              src="/docs/gungun-insights.png"
               width={1000}
             />
           </div>
@@ -504,7 +504,7 @@ export default function Home() {
                 Download it, run it, pin it.
               </h2>
               <p className="mt-5 text-[15.5px] leading-relaxed text-paper/80">
-                One setup file and nothing to hunt down: Nectar brings its own .NET runtime and
+                One setup file and nothing to hunt down: Gungun brings its own .NET runtime and
                 Windows App SDK. It installs for your Windows user, so there is no administrator
                 prompt — Windows only asks once whether you trust the file;{" "}
                 <a
@@ -518,7 +518,7 @@ export default function Home() {
 
               <ol className="mt-8 grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-3">
                 {[
-                  "Download Nectar-Setup and run it.",
+                  "Download Gungun-Setup and run it.",
                   "More info, then Run anyway — the SmartScreen prompt, explained.",
                   "Press Alt + N. It starts hidden in the notch."
                 ].map((step, index) => (
@@ -551,7 +551,7 @@ export default function Home() {
               <p className="m-0 mt-5 border-t-2 border-paper/20 pt-4 text-[13px] leading-relaxed text-paper/70">
                 Prefer to build it yourself? The source needs the .NET 8 SDK:{" "}
                 <code className="mt-2 block overflow-x-auto rounded bg-black/40 px-3 py-2 font-mono text-[12px] text-paper/90">
-                  dotnet build Nectar/Nectar.csproj -c Release
+                  dotnet build Gungun/Gungun.csproj -c Release
                 </code>
               </p>
             </div>

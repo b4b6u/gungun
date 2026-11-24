@@ -1,5 +1,5 @@
 param(
-    [string]$Exe = "D:\canopy\Nectar\bin\Debug\net8.0-windows10.0.19041.0\win-x64\Nectar.exe"
+    [string]$Exe = "D:\canopy\Gungun\bin\Debug\net8.0-windows10.0.19041.0\win-x64\Gungun.exe"
 )
 
 $ErrorActionPreference = "Stop"
@@ -47,10 +47,10 @@ function Invoke-Button($scope, [string]$name) {
     return $true
 }
 
-$log = Join-Path $env:LOCALAPPDATA "Nectar\nectar.log"
+$log = Join-Path $env:LOCALAPPDATA "Gungun\gungun.log"
 $before = if (Test-Path $log) { (Get-Item $log).Length } else { 0 }
 
-Get-Process Nectar -ErrorAction SilentlyContinue | Stop-Process -Force
+Get-Process Gungun -ErrorAction SilentlyContinue | Stop-Process -Force
 Start-Sleep -Milliseconds 500
 
 $process = Start-Process -FilePath $Exe -PassThru
@@ -97,7 +97,7 @@ foreach ($text in $texts) {
 }
 
 Write-Output "SETTINGS BUTTONS:"
-foreach ($name in @("Open microphone privacy settings", "Show the Nectar data folder")) {
+foreach ($name in @("Open microphone privacy settings", "Show the Gungun data folder")) {
     $button = Find-Button $window $name
     if ($null -eq $button) { Write-Output "  MISSING: $name" } else { Write-Output "  present: $name" }
 }
@@ -122,7 +122,7 @@ if (Test-Path $log) {
 
 Write-Output "PROMPT WINDOWS:"
 foreach ($child in $root.FindAll([System.Windows.Automation.TreeScope]::Children, [System.Windows.Automation.Condition]::TrueCondition)) {
-    if ($child.Current.Name -match "microphone|voice|dictat|privacy|Nectar") {
+    if ($child.Current.Name -match "microphone|voice|dictat|privacy|Gungun") {
         Write-Output ("  '{0}' pid={1} class='{2}'" -f $child.Current.Name, $child.Current.ProcessId, $child.Current.ClassName)
     }
 }

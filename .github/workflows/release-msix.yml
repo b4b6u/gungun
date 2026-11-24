@@ -2,7 +2,7 @@ name: release-msix
 
 # MSIX release: builds the self-contained package, signs it with the developer's own code-signing
 # certificate from a PFX secret, and attaches the package, the rendered .appinstaller feed and both
-# SHA-256 sidecars to the tagged release. The website's /downloads/nectar.appinstaller route reads
+# SHA-256 sidecars to the tagged release. The website's /downloads/gungun.appinstaller route reads
 # that release to build the live feed, so the asset names and the version in the tag are the
 # interface — renaming them breaks updates for installed copies.
 #
@@ -40,9 +40,9 @@ jobs:
       - name: Assert the release build is the free build
         shell: pwsh
         run: |
-          $dll = Get-ChildItem -Path 'Nectar/bin' -Recurse -Filter 'Nectar.dll' -ErrorAction SilentlyContinue |
+          $dll = Get-ChildItem -Path 'Gungun/bin' -Recurse -Filter 'Gungun.dll' -ErrorAction SilentlyContinue |
             Sort-Object LastWriteTime -Descending | Select-Object -First 1
-          if (-not $dll) { Write-Host 'No Nectar.dll yet; the packaging step builds it and its own check runs there.'; exit 0 }
+          if (-not $dll) { Write-Host 'No Gungun.dll yet; the packaging step builds it and its own check runs there.'; exit 0 }
 
           $text = [Text.Encoding]::Latin1.GetString([IO.File]::ReadAllBytes($dll.FullName))
           if ($text -match 'ProEntitlementService') {
@@ -54,15 +54,15 @@ jobs:
         id: v
         shell: pwsh
         run: |
-          [xml]$project = Get-Content 'Nectar/Nectar.csproj'
+          [xml]$project = Get-Content 'Gungun/Gungun.csproj'
           $version = $project.Project.PropertyGroup.Version |
             Where-Object { $_ } | Select-Object -First 1
-          if (-not $version) { throw 'Nectar/Nectar.csproj has no <Version>.' }
+          if (-not $version) { throw 'Gungun/Gungun.csproj has no <Version>.' }
           if ($version -notmatch '^\d+\.\d+\.\d+$') {
             throw "Version '$version' must look like MAJOR.MINOR.PATCH."
           }
 
-          [xml]$manifest = Get-Content 'Nectar/Package.appxmanifest'
+          [xml]$manifest = Get-Content 'Gungun/Package.appxmanifest'
           $identity = $manifest.Package.Identity
           $expected = "$version.0"
           if ($identity.Version -ne $expected) {
@@ -78,7 +78,7 @@ jobs:
           "version=$version" >> $env:GITHUB_OUTPUT
           "identity=$expected" >> $env:GITHUB_OUTPUT
           "package=$($identity.Name)" >> $env:GITHUB_OUTPUT
-          Write-Host "Releasing Nectar $version as $($identity.Name) $expected"
+          Write-Host "Releasing Gungun $version as $($identity.Name) $expected"
 
       - name: Set up .NET
         uses: actions/setup-dotnet@v4
@@ -101,17 +101,17 @@ jobs:
 
       # The same script developers run locally, so CI and a dry run cannot drift apart: it builds
       # the self-contained package, signs it SHA-256 with an RFC 3161 timestamp, verifies the
-      # signature and stages dist/Nectar-<version>-x64.msix.
+      # signature and stages dist/Gungun-<version>-x64.msix.
       - name: Build and sign the package
         shell: pwsh
         env:
           # Read by scripts/package-msix.ps1, so the password never appears on a command line.
-          NECTAR_PFX_PASSWORD: ${{ secrets.PFX_PASSWORD }}
+          GUNGUN_PFX_PASSWORD: ${{ secrets.PFX_PASSWORD }}
         run: |
           ./scripts/package-msix.ps1 -PfxPath '${{ steps.cert.outputs.pfx }}'
           if ($LASTEXITCODE -ne 0) { throw "package-msix.ps1 failed with $LASTEXITCODE" }
 
-          $msix = "dist/Nectar-${{ steps.v.outputs.version }}-x64.msix"
+          $msix = "dist/Gungun-${{ steps.v.outputs.version }}-x64.msix"
           if (-not (Test-Path $msix)) { throw "Expected $msix to exist" }
 
       # Signing does not check that the certificate can install the package — only the manifest
@@ -120,7 +120,7 @@ jobs:
       - name: Check the packed identity matches the signer
         shell: pwsh
         run: |
-          $msix = "dist/Nectar-${{ steps.v.outputs.version }}-x64.msix"
+          $msix = "dist/Gungun-${{ steps.v.outputs.version }}-x64.msix"
           Add-Type -AssemblyName System.IO.Compression.FileSystem
 
           $zip = [IO.Compression.ZipFile]::OpenRead((Resolve-Path $msix))
@@ -183,12 +183,12 @@ jobs:
           ./scripts/package-installer.ps1 -MakensisPath 'build/nsis-3.11/makensis.exe'
           if ($LASTEXITCODE -ne 0) { throw "package-installer.ps1 failed with $LASTEXITCODE" }
 
-          $setup = "dist/Nectar-Setup-${{ steps.v.outputs.version }}.exe"
+          $setup = "dist/Gungun-Setup-${{ steps.v.outputs.version }}.exe"
           if (-not (Test-Path $setup)) { throw "Expected $setup to exist" }
 
-          # Version-less alias: /releases/latest/download/Nectar-Setup.exe stays valid for every
+          # Version-less alias: /releases/latest/download/Gungun-Setup.exe stays valid for every
           # future release, and that is the URL the site links to.
-          Copy-Item $setup 'dist/Nectar-Setup.exe' -Force
+          Copy-Item $setup 'dist/Gungun-Setup.exe' -Force
 
       # The site's feed route reads <MainPackage Publisher=...> from this asset, so the download page
       # cannot disagree with the build it is serving. Windows also accepts the file directly.
@@ -198,7 +198,7 @@ jobs:
           $package = '${{ steps.v.outputs.package }}'
           $identity = '${{ steps.v.outputs.identity }}'
           $tag = 'v${{ steps.v.outputs.version }}'
-          $name = "Nectar-${{ steps.v.outputs.version }}-x64.msix"
+          $name = "Gungun-${{ steps.v.outputs.version }}-x64.msix"
           $base = "https://github.com/${{ github.repository }}/releases/download/$tag"
           $publisher = (Get-AuthenticodeSignature "dist/$name").SignerCertificate.Subject
 
@@ -211,7 +211,7 @@ jobs:
           <AppInstaller
               xmlns="http://schemas.microsoft.com/appx/appinstaller/2018"
               Version="{2}"
-              Uri="{0}/nectar.appinstaller">
+              Uri="{0}/gungun.appinstaller">
 
             <MainPackage
                 Name="{1}"
@@ -229,7 +229,7 @@ jobs:
           '
           $feed = $template -f $base, $package, $identity, $publisher, $name
 
-          $path = 'dist/nectar.appinstaller'
+          $path = 'dist/gungun.appinstaller'
           [IO.File]::WriteAllText($path, $feed, [Text.UTF8Encoding]::new($false))
           Write-Host "Wrote $path for $name"
 
@@ -237,11 +237,11 @@ jobs:
         shell: pwsh
         run: |
           $files = @(
-            "dist/Nectar-Setup-${{ steps.v.outputs.version }}.exe",
-            'dist/Nectar-Setup.exe',
-            "dist/Nectar-${{ steps.v.outputs.version }}-win-x64.zip",
-            "dist/Nectar-${{ steps.v.outputs.version }}-x64.msix",
-            'dist/nectar.appinstaller'
+            "dist/Gungun-Setup-${{ steps.v.outputs.version }}.exe",
+            'dist/Gungun-Setup.exe',
+            "dist/Gungun-${{ steps.v.outputs.version }}-win-x64.zip",
+            "dist/Gungun-${{ steps.v.outputs.version }}-x64.msix",
+            'dist/gungun.appinstaller'
           )
 
           foreach ($file in $files) {
@@ -259,16 +259,16 @@ jobs:
         with:
           tag_name: v${{ steps.v.outputs.version }}
           files: |
-            dist/Nectar-Setup-${{ steps.v.outputs.version }}.exe
-            dist/Nectar-Setup-${{ steps.v.outputs.version }}.exe.sha256
-            dist/Nectar-Setup.exe
-            dist/Nectar-Setup.exe.sha256
-            dist/Nectar-${{ steps.v.outputs.version }}-win-x64.zip
-            dist/Nectar-${{ steps.v.outputs.version }}-win-x64.zip.sha256
-            dist/Nectar-${{ steps.v.outputs.version }}-x64.msix
-            dist/Nectar-${{ steps.v.outputs.version }}-x64.msix.sha256
-            dist/nectar.appinstaller
-            dist/nectar.appinstaller.sha256
+            dist/Gungun-Setup-${{ steps.v.outputs.version }}.exe
+            dist/Gungun-Setup-${{ steps.v.outputs.version }}.exe.sha256
+            dist/Gungun-Setup.exe
+            dist/Gungun-Setup.exe.sha256
+            dist/Gungun-${{ steps.v.outputs.version }}-win-x64.zip
+            dist/Gungun-${{ steps.v.outputs.version }}-win-x64.zip.sha256
+            dist/Gungun-${{ steps.v.outputs.version }}-x64.msix
+            dist/Gungun-${{ steps.v.outputs.version }}-x64.msix.sha256
+            dist/gungun.appinstaller
+            dist/gungun.appinstaller.sha256
 
       # `if: always()` matters: without it a failed build or a cancelled run leaves the decoded PFX
       # on the runner. Runners are ephemeral, but a retried job can reuse the workspace, and

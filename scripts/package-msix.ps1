@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Builds the Nectar MSIX, signs it with a local code-signing certificate and stages it in dist\.
+    Builds the Gungun MSIX, signs it with a local code-signing certificate and stages it in dist\.
 
 .DESCRIPTION
     Produces one self-contained .msix: the .NET runtime and the Windows App SDK travel inside the
@@ -15,7 +15,7 @@
     Thumbprint of a code-signing certificate already in Cert:\CurrentUser\My.
 
 .PARAMETER Subject
-    Subject to look up instead of a thumbprint. Defaults to CN=Nectar.
+    Subject to look up instead of a thumbprint. Defaults to CN=Gungun.
 
 .PARAMETER PfxPath
     A .pfx file to sign with. Ignored when -Thumbprint or -Subject finds a certificate.
@@ -32,21 +32,21 @@
 [CmdletBinding()]
 param(
     [string]$Thumbprint,
-    [string]$Subject = 'CN=Nectar',
+    [string]$Subject = 'CN=Gungun',
     [string]$PfxPath,
     [string]$TimestampUrl = 'http://timestamp.digicert.com'
 )
 
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
-$project = Join-Path $root 'Nectar\Nectar.csproj'
+$project = Join-Path $root 'Gungun\Gungun.csproj'
 $outDir = Join-Path $root 'build\msix'
 
 $version = ([xml](Get-Content $project)).Project.PropertyGroup.Version |
     Where-Object { $_ } | Select-Object -First 1
 if (-not $version) { throw "Could not read <Version> from $project" }
 
-Write-Output "building Nectar $version (MSIX, x64, self-contained)"
+Write-Output "building Gungun $version (MSIX, x64, self-contained)"
 
 # -restore is explicit: a clean checkout (CI, a fresh clone) has no obj/project.assets.json, and
 # msbuild otherwise fails with NETSDK1004 before it ever reaches the compiler.
@@ -86,7 +86,7 @@ if ($Thumbprint) {
 elseif ($PfxPath) {
     $pfxFile = (Resolve-Path $PfxPath).Path
     $signArgs += @('/f', $pfxFile)
-    $pfxPassword = if ($env:NECTAR_PFX_PASSWORD) { $env:NECTAR_PFX_PASSWORD } else { '' }
+    $pfxPassword = if ($env:GUNGUN_PFX_PASSWORD) { $env:GUNGUN_PFX_PASSWORD } else { '' }
     if ($pfxPassword) { $signArgs += @('/p', $pfxPassword) }
 
     # The thumbprint has to come out of the file itself: a PFX holds several certificates and only
@@ -125,7 +125,7 @@ if ($sig.Status -notin @('Valid', 'UnknownError')) {
 
 $dist = Join-Path $root 'dist'
 New-Item -ItemType Directory -Force -Path $dist | Out-Null
-$staged = Join-Path $dist "Nectar-$version-x64.msix"
+$staged = Join-Path $dist "Gungun-$version-x64.msix"
 Copy-Item $built.FullName $staged -Force
 $hash = Get-FileHash $staged -Algorithm SHA256
 

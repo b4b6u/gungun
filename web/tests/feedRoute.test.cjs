@@ -1,5 +1,5 @@
 process.env.NODE_ENV = "test";
-process.env.NECTAR_GITHUB_REPO = "o/n";
+process.env.GUNGUN_GITHUB_REPO = "o/n";
 process.env.FEED_RATE_LIMIT = "5";
 process.env.FEED_CACHE_SECONDS = "30";
 delete process.env.MSIX_PUBLISHER;
@@ -11,24 +11,24 @@ const assert = require("node:assert/strict");
 const route = require("../.test-build/app/api/download/appinstaller/route.js");
 
 const realFetch = global.fetch;
-const MSIX_URL = "https://github.com/o/n/releases/download/v2.0.1/Nectar-2.0.1-x64.msix";
+const MSIX_URL = "https://github.com/o/n/releases/download/v2.0.1/Gungun-2.0.1-x64.msix";
 
 const RELEASE = {
   tag_name: "v2.0.1",
   draft: false,
   prerelease: false,
   assets: [
-    { name: "Nectar-2.0.1-x64.msix", browser_download_url: MSIX_URL },
+    { name: "Gungun-2.0.1-x64.msix", browser_download_url: MSIX_URL },
     {
-      name: "nectar.appinstaller",
-      browser_download_url: "https://github.com/o/n/releases/download/v2.0.1/nectar.appinstaller"
+      name: "gungun.appinstaller",
+      browser_download_url: "https://github.com/o/n/releases/download/v2.0.1/gungun.appinstaller"
     }
   ]
 };
 
 const UPSTREAM_FEED = `<?xml version="1.0" encoding="utf-8"?>
-<AppInstaller xmlns="http://schemas.microsoft.com/appx/appinstaller/2018" Version="1.0.0.0" Uri="https://nectar.app/download">
-  <MainPackage Name="Nectar.Desktop" Version="2.0.1.0" Publisher="CN=Nectar Ltd, O=Nectar Ltd, C=GB" ProcessorArchitecture="x64" Uri="${MSIX_URL}" />
+<AppInstaller xmlns="http://schemas.microsoft.com/appx/appinstaller/2018" Version="1.0.0.0" Uri="https://gungun.app/download">
+  <MainPackage Name="Gungun.Desktop" Version="2.0.1.0" Publisher="CN=Gungun Ltd, O=Gungun Ltd, C=GB" ProcessorArchitecture="x64" Uri="${MSIX_URL}" />
 </AppInstaller>`;
 
 let caseId = 0;
@@ -36,8 +36,8 @@ let caseId = 0;
 /** A distinct repository per test keeps the route's in-process feed cache from leaking between cases. */
 function freshRepo() {
   caseId += 1;
-  process.env.NECTAR_GITHUB_REPO = `o/case-${caseId}`;
-  return process.env.NECTAR_GITHUB_REPO;
+  process.env.GUNGUN_GITHUB_REPO = `o/case-${caseId}`;
+  return process.env.GUNGUN_GITHUB_REPO;
 }
 
 let ipSuffix = 10;
@@ -48,7 +48,7 @@ function nextIp() {
 
 function call(path = "/download", ip = nextIp(), headers = {}) {
   return route.GET(
-    new Request(`https://nectar.app${path}`, {
+    new Request(`https://gungun.app${path}`, {
       headers: { "x-forwarded-for": ip, ...headers }
     })
   );
@@ -85,7 +85,7 @@ function stubGithub({ release = RELEASE, feed = UPSTREAM_FEED, failLatest = fals
 
 test.afterEach(() => {
   global.fetch = realFetch;
-  process.env.NECTAR_GITHUB_REPO = "o/n";
+  process.env.GUNGUN_GITHUB_REPO = "o/n";
   delete process.env.MSIX_PUBLISHER;
 });
 
@@ -100,15 +100,15 @@ test("serves the generated feed with the right MIME type, caching and identity",
   assert.equal(response.headers.get("content-type"), "application/appinstaller");
   assert.match(response.headers.get("cache-control"), /s-maxage=60/);
   assert.match(response.headers.get("etag"), /^"[0-9a-f]{8}"$/);
-  assert.equal(response.headers.get("x-nectar-cache"), "MISS");
-  assert.equal(response.headers.get("x-nectar-feed-version"), "2.0.1.0");
-  assert.ok(response.headers.get("x-nectar-request-id"));
+  assert.equal(response.headers.get("x-gungun-cache"), "MISS");
+  assert.equal(response.headers.get("x-gungun-feed-version"), "2.0.1.0");
+  assert.ok(response.headers.get("x-gungun-request-id"));
   assert.equal(response.headers.get("x-ratelimit-limit"), "5");
   assert.match(response.headers.get("server-timing"), /^feed;dur=/);
 
-  assert.ok(xml.includes('Publisher="CN=Nectar Ltd, O=Nectar Ltd, C=GB"'), "publisher came from the release asset");
+  assert.ok(xml.includes('Publisher="CN=Gungun Ltd, O=Gungun Ltd, C=GB"'), "publisher came from the release asset");
   assert.ok(xml.includes(`Uri="${MSIX_URL}"`), "installer points at the release asset");
-  assert.ok(xml.includes('Uri="https://nectar.app/download"'), "root Uri is the feed");
+  assert.ok(xml.includes('Uri="https://gungun.app/download"'), "root Uri is the feed");
   assert.ok(!/__[A-Z_]+__/.test(xml), "no template placeholders survive");
   assert.equal(calls.length, 2, "one release lookup and one .appinstaller asset fetch");
 });
@@ -136,7 +136,7 @@ test("serves a repeat request from the in-process cache without touching GitHub"
   await second.text();
 
   assert.equal(second.status, 200);
-  assert.equal(second.headers.get("x-nectar-cache"), "HIT");
+  assert.equal(second.headers.get("x-gungun-cache"), "HIT");
   assert.equal(calls.length, 2, "upstream is not called twice");
 });
 
@@ -144,13 +144,13 @@ test("keeps the legacy update path in the feed URL it returns", async () => {
   freshRepo();
   stubGithub();
 
-  const response = await call("/downloads/nectar.appinstaller");
+  const response = await call("/downloads/gungun.appinstaller");
   await response.text();
 
   assert.equal(response.status, 200);
   assert.equal(
-    response.headers.get("x-nectar-feed-url"),
-    "https://nectar.app/downloads/nectar.appinstaller"
+    response.headers.get("x-gungun-feed-url"),
+    "https://gungun.app/downloads/gungun.appinstaller"
   );
 });
 
@@ -159,13 +159,13 @@ test("upgrades a proxied http request to https in the feed", async () => {
   stubGithub();
 
   const response = await route.GET(
-    new Request("http://nectar.app/api/download/appinstaller", {
+    new Request("http://gungun.app/api/download/appinstaller", {
       headers: { "x-forwarded-for": nextIp() }
     })
   );
   const xml = await response.text();
 
-  assert.ok(xml.includes('Uri="https://nectar.app/api/download/appinstaller"'));
+  assert.ok(xml.includes('Uri="https://gungun.app/api/download/appinstaller"'));
 });
 
 test("returns a styled 503 before the first release exists", async () => {
@@ -211,7 +211,7 @@ test("returns 500 when neither the release asset nor the environment names a pub
   stubGithub({
     release: {
       ...RELEASE,
-      assets: [{ name: "Nectar-2.0.1-x64.msix", browser_download_url: MSIX_URL }]
+      assets: [{ name: "Gungun-2.0.1-x64.msix", browser_download_url: MSIX_URL }]
     }
   });
 
@@ -228,7 +228,7 @@ test("falls back to MSIX_PUBLISHER when the release has no .appinstaller asset",
   stubGithub({
     release: {
       ...RELEASE,
-      assets: [{ name: "Nectar-2.0.1-x64.msix", browser_download_url: MSIX_URL }]
+      assets: [{ name: "Gungun-2.0.1-x64.msix", browser_download_url: MSIX_URL }]
     }
   });
 
@@ -251,7 +251,7 @@ test("returns 500 for a tag that is not MAJOR.MINOR.PATCH", async () => {
 });
 
 test("returns 500 when no repository is configured", async () => {
-  delete process.env.NECTAR_GITHUB_REPO;
+  delete process.env.GUNGUN_GITHUB_REPO;
   delete process.env.GITHUB_REPOSITORY;
   stubGithub();
 

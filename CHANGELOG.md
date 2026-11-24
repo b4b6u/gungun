@@ -1,7 +1,7 @@
 # Changelog
 
-What changed in each released build of Nectar. Dates are the day the release was published.
-Downloads live at <https://github.com/b4b6u/Nectar/releases>.
+What changed in each released build of Gungun. Dates are the day the release was published.
+Downloads live at <https://github.com/b4b6u/Gungun/releases>.
 
 ## [Unreleased]
 
@@ -15,8 +15,8 @@ Downloads live at <https://github.com/b4b6u/Nectar/releases>.
 - **Existing databases upgrade in place.** The category table and the task column are created on
   the next launch without touching a single task.
 
-- **Nectar Pro, sold through Dodo Payments.** A licence key is the account: Dodo holds the customer,
-  the subscription and the billing portal, and Nectar holds a key, an activation id and the last
+- **Gungun Pro, sold through Dodo Payments.** A licence key is the account: Dodo holds the customer,
+  the subscription and the billing portal, and Gungun holds a key, an activation id and the last
   time it checked in. Activation and validation use Dodo's public license endpoints, so the app
   carries no merchant secret and there is nothing in the binary worth extracting.
 - **Three palettes are free** — Paper, Meadow and Sunset. Midnight and any palette added later are
@@ -24,7 +24,7 @@ Downloads live at <https://github.com/b4b6u/Nectar/releases>.
   resolves to Paper on the next launch instead of repainting oddly.
 - **A seven-day grace window.** Pro stays on without a check-in; only an explicit "invalid" from
   Dodo turns it off, so a captive portal or a dead Wi-Fi never costs someone what they paid for.
-- **A Nectar Pro panel in Settings › Look**: the plan, the masked key, one field and one button,
+- **A Gungun Pro panel in Settings › Look**: the plan, the masked key, one field and one button,
   plus "forget this key on this PC". Nothing else about the app needs an account.
 
 ### Notes
@@ -105,7 +105,7 @@ Downloads live at <https://github.com/b4b6u/Nectar/releases>.
 - **The overlay stays above other apps.** It was pinned to the top of the z-order once at launch,
   and the window calls WinUI makes when the overlay shows, moves or activates could drop it back
   into the normal band — so the notch strip ended up behind whatever was open. Every z-order
-  request is now rewritten to keep Nectar on top, and a resize re-pins it, which also covers DPI
+  request is now rewritten to keep Gungun on top, and a resize re-pins it, which also covers DPI
   changes, moving between displays, and collapse/expand. Measured over a maximised window, the
   overlay used to sit below it and now sits above it.
 - **The `.appinstaller` feed reports its own version.** The feed's `Version` attribute was fixed at
@@ -115,7 +115,7 @@ Downloads live at <https://github.com/b4b6u/Nectar/releases>.
 ### Changed
 
 - The site's download button links straight at the version-less release asset
-  `releases/latest/download/Nectar-Setup.exe`, so it needs no GitHub API call, no environment
+  `releases/latest/download/Gungun-Setup.exe`, so it needs no GitHub API call, no environment
   variable and no redeploy to keep working.
 - The install guide no longer sends people to a domain the project does not own, checks the
   published SHA-256 instead of a package signer that only exists for MSIX installs, and says
@@ -140,16 +140,16 @@ First release.
 
 - Offline Windows workspace overlay: tasks, an ephemeral note, insights, a focus timer,
   reminders, and an optional calendar link (Google or Microsoft), with all data in SQLite under
-  `%LOCALAPPDATA%\Nectar`.
+  `%LOCALAPPDATA%\Gungun`.
 - Three ways to install: a per-user **setup exe** that needs no administrator rights and no
   certificate, a **portable zip**, and a **signed MSIX** with an `.appinstaller` feed for
   automatic updates.
-- The MSIX is signed with a self-signed certificate (`CN=Nectar`), so Windows shows a "Windows
+- The MSIX is signed with a self-signed certificate (`CN=Gungun`), so Windows shows a "Windows
   protected your PC" prompt on first run; the setup exe is not code-signed at all. Every asset
   ships with a `.sha256` sidecar.
 - The website moved into the `web/` Next app: landing page, install walk-through, privacy and
   licence pages, and the routes that serve the MSIX feed and the download redirect.
 
-[1.0.3]: https://github.com/b4b6u/Nectar/releases/tag/v1.0.3
-[1.0.1]: https://github.com/b4b6u/Nectar/releases/tag/v1.0.1
-[1.0.0]: https://github.com/b4b6u/Nectar/releases/tag/v1.0.0
+[1.0.3]: https://github.com/b4b6u/Gungun/releases/tag/v1.0.3
+[1.0.1]: https://github.com/b4b6u/Gungun/releases/tag/v1.0.1
+[1.0.0]: https://github.com/b4b6u/Gungun/releases/tag/v1.0.0
