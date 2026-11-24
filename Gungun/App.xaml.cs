@@ -85,6 +85,9 @@ public partial class App : Application
 
             if (legacy is null)
             {
+                // The folder may already have been adopted by an earlier run, taken before the
+                // app knew to repoint the paths it had saved into it.
+                RetargetStoredPaths(local);
                 return;
             }
 
@@ -106,12 +109,48 @@ public partial class App : Application
                     File.Move(source, target);
                 }
             }
+
+            RetargetStoredPaths(local);
         }
         catch (Exception ex)
         {
             AppLogger.Log("Workspace migration from the legacy folder failed", ex);
         }
     }
+
+    /// <summary>
+    /// A settings file names files by full path, and those paths outlive the folder rename - the
+    /// profile photograph and a custom font would stop loading. Repointed in place, once, and
+    /// only towards a legacy folder that is no longer on disk, so an untouched older copy is
+    /// never made to stand in for the workspace in use.
+    /// </summary>
+    private static void RetargetStoredPaths(string local)
+    {
+        var current = Path.Combine(local, WorkspaceMigration.CurrentFolder);
+        var settingsPath = Path.Combine(current, "settings.json");
+        if (!File.Exists(settingsPath))
+        {
+            return;
+        }
+
+        var text = File.ReadAllText(settingsPath);
+        var updated = text;
+        foreach (var name in WorkspaceMigration.LegacyFolders)
+        {
+            var legacyRoot = Path.Combine(local, name);
+            if (!Directory.Exists(legacyRoot))
+            {
+                updated = WorkspaceMigration.RetargetPaths(updated, legacyRoot, current);
+            }
+        }
+
+        if (!string.Equals(updated, text, StringComparison.Ordinal))
+        {
+            AtomicFile.WriteAllText(settingsPath, updated);
+            AppLogger.Log("Stored paths now point into the Gungun folder.");
+        }
+    }
+
     private static bool TryClaimSingleInstance()
     {
         try

@@ -76,4 +76,60 @@ public sealed class WorkspaceMigrationTests
         Assert.Equal(3, moves.Count);
         Assert.Equal(3, moves.Select(move => move.To).Distinct().Count());
     }
+
+    private const string Local = @"C:\Users\HP\AppData\Local";
+
+    private static string Retarget(string json) =>
+        WorkspaceMigration.RetargetPaths(json, Local + @"\Nectar", Local + @"\Gungun");
+
+    [Fact]
+    public void ASavedPhotographFollowsTheFolderRename()
+    {
+        var json = "{ \"PhotoPath\": \"C:\\\\Users\\\\HP\\\\AppData\\\\Local\\\\Nectar\\\\profile.png\" }";
+
+        var result = Retarget(json);
+
+        Assert.Contains(@"Local\\Gungun\\profile.png", result, StringComparison.Ordinal);
+        Assert.DoesNotContain("Nectar", result, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void ACustomFontFollowsItToo()
+    {
+        var json = "{ \"CustomFontPath\": \"C:\\\\Users\\\\HP\\\\AppData\\\\Local\\\\Nectar\\\\fonts\\\\Inter.ttf\" }";
+
+        Assert.Contains(@"Local\\Gungun\\fonts\\Inter.ttf", Retarget(json), StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void APathOutsideTheOldFolderIsLeftAlone()
+    {
+        var json = "{ \"PhotoPath\": \"C:\\\\Users\\\\HP\\\\Pictures\\\\profile.png\" }";
+
+        Assert.Equal(json, Retarget(json));
+    }
+
+    [Fact]
+    public void AWordThatMerelyContainsTheNameIsLeftAlone()
+    {
+        var json = "{ \"DisplayName\": \"Nectar fan\", \"PhotoPath\": \"C:\\\\Users\\\\HP\\\\AppData\\\\Local\\\\Nectar-old\\\\profile.png\" }";
+
+        Assert.Equal(json, Retarget(json));
+    }
+
+    [Fact]
+    public void RepointingTwiceChangesNothingTheSecondTime()
+    {
+        var once = Retarget("{ \"PhotoPath\": \"C:\\\\Users\\\\HP\\\\AppData\\\\Local\\\\Nectar\\\\profile.png\" }");
+
+        Assert.Equal(once, Retarget(once));
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("{ }")]
+    public void SettingsThatNameNoFileComeBackUnchanged(string json)
+    {
+        Assert.Equal(json, Retarget(json));
+    }
 }

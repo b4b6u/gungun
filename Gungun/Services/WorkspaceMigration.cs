@@ -80,4 +80,31 @@ internal static class WorkspaceMigration
 
         return moves;
     }
+
+    /// <summary>
+    /// Full paths the app saved into its own settings - the profile photograph, a custom font -
+    /// keep pointing at the folder it has just moved away from, so a workspace that travelled
+    /// across would show no photograph and no font. The settings text is JSON, where a separator
+    /// arrives doubled, so the prefix is escaped on both sides before it is swapped.
+    /// </summary>
+    /// <param name="json">The settings text as it sits on disk.</param>
+    /// <param name="legacyRoot">The folder that is no longer there.</param>
+    /// <param name="currentRoot">The folder that replaced it.</param>
+    /// <returns>The same text, with any stored path that led into the old folder repointed.</returns>
+    internal static string RetargetPaths(string json, string legacyRoot, string currentRoot)
+    {
+        if (string.IsNullOrEmpty(json) || string.IsNullOrEmpty(legacyRoot) || string.IsNullOrEmpty(currentRoot))
+        {
+            return json;
+        }
+
+        var from = Escape(legacyRoot.TrimEnd('\\') + "\\");
+        var to = Escape(currentRoot.TrimEnd('\\') + "\\");
+        return json.Contains(from, StringComparison.Ordinal)
+            ? json.Replace(from, to, StringComparison.Ordinal)
+            : json;
+
+        static string Escape(string path) =>
+            path.Replace("\\", "\\\\", StringComparison.Ordinal).Replace("\"", "\\\"", StringComparison.Ordinal);
+    }
 }
