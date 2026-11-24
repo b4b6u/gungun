@@ -5,6 +5,14 @@ Downloads live at <https://github.com/b4b6u/Gungun/releases>.
 
 ## [Unreleased]
 
+### Changed
+
+- **The app is called Gungun.** A Hindi word - the sound of humming - and the name the product goes
+  forward with. The executable, the installer, the tray, the window titles, the package identity,
+  the data folder and the docs all carry it; the clay tile that has been the mark since 1.0.3 is
+  unchanged. An existing workspace is moved across on first launch, folder, database and log, so a
+  change of name is not a change of workspace.
+
 ### Added
 
 - **Categories, three of them free.** A task can now be filed under a category: the tag on any task
